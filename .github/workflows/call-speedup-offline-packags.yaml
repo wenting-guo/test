@@ -1,36 +1,26 @@
 name: SPEEDUP OFFLINE PACKAGES
-on: [workflow_call,workflow_dispatch]
+on:
+  workflow_call:
+
 jobs:
   speedup_offline_packages:
-      runs-on: ubuntu-latest
-      continue-on-error: true
-      permissions:
-        packages: write
-        contents: read
-      env:
-        SPEEDUP_BASE_URL: ${{ secrets.SPEEDUP_BASE_URL }}
-      strategy:
-        fail-fast: false
-        matrix:
-          include:
-            - name: files_amd64
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/files-amd64-${GITHUB_REF_NAME}.tar.gz
-            - name: images_amd64
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/images-amd64-${GITHUB_REF_NAME}.tar.gz
-            - name: files_arm64
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/files-arm64-${GITHUB_REF_NAME}.tar.gz
-            - name: images_arm64
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/images-arm64-${GITHUB_REF_NAME}.tar.gz
-            - name: os_centos7
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/os-pkgs-centos7-${GITHUB_REF_NAME}.tar.gz
-            - name: os_kylinv10
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/os-pkgs-kylinv10-${GITHUB_REF_NAME}.tar.gz
-            - name: os_redhat8
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/os-pkgs-redhat8-${GITHUB_REF_NAME}.tar.gz
-            - name: os_redhat7
-              file: ${SPEEDUP_BASE_URL}/${GITHUB_REF_NAME}/os-pkgs-redhat7-${GITHUB_REF_NAME}.tar.gz
-      steps:
-        - name: wget_files
-          run: |
-            echo "Start speed up ${{ matrix.name }}"
-            wget -q -c -T 1m ${{ matrix.file }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      packages: write
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        name: [files-amd64, images-amd64, files-arm64, images-arm64, os-pkgs-centos7, os-pkgs-kylinv10, os-pkgs-redhat8, os-pkgs-redhat7]
+
+    steps:
+      - name: wget_files
+        run: |
+          BASE_URL="https://files.m.daocloud.io/github.com/kubean-io/kubean/releases/download"
+          echo "Start speed up ${{ matrix.name }}"
+          echo "${{ inputs.S_TAG }} "
+          file_name="${BASE_URL}/${{ inputs.S_TAG }}/${{ matrix.name }}-${{ inputs.S_TAG }}.tar.gz"
+          echo "${file_name}"
+          wget -q -c -T 1m ${BASE_URL}/${GITHUB_REF_NAME}/${{ matrix.name }}-${GITHUB_REF_NAME}.tar.gz

@@ -1,0 +1,10 @@
+name: SPEEDUP
+
+on: workflow_dispatch
+jobs:
+  call_speedup_offline_packages:
+    uses: ./.github/workflows/call-speedup-offline-packags.yaml
+
+    permissions:
+      packages: write
+      contents: read
