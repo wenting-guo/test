@@ -15,6 +15,8 @@
     6. start a new cluster creation
     7. after the second create job finished, check the job-related pod status is "Succeeded", and check cluster status by sonobuoy
 
+
+
 ### Add worker
     1. create a cluster: 1 master + 1worker
     2. check cluster status
