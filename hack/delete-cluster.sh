@@ -10,3 +10,5 @@ source "${REPO_ROOT}"/hack/util.sh
 HOST_CLUSTER_NAME=${1:-"kubean-host"}
 
 util::delete_cluster "${HOST_CLUSTER_NAME}"
+
+echo "try and try"
